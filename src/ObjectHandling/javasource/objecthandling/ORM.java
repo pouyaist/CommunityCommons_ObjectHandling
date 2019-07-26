@@ -180,9 +180,9 @@ public class ORM
 					throw new IllegalArgumentException("It is not possible to clone reverse referencesets: '" + fullAssocName + "'");
 				}
 				
-				List<IMendixObject> objs = Core.retrieveXPathQueryEscaped(ctx, "//%s[%s='%s']", 
-				        relationParent.getName(), assocname, String.valueOf(src.getId().toLong()));
-				
+				List<IMendixObject> objs = Core.createXPathQuery(String.format("//%s[%s='$value']", 
+				        relationParent.getName(), assocname)).setVariable("$value", String.valueOf(src.getId().toLong())).execute(ctx);
+
 				for(IMendixObject obj : objs) {
 				    @SuppressWarnings("unused") // object is unused on purpose
                     IMendixIdentifier refObj = getCloneOfObject(ctx, obj, toskip, tokeep, revAssocs, skipEntities, skipModules, mappedObjects);
